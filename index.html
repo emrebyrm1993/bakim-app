@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>BAKIM Uygulaması</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 20px; 
+      background: #f4f6f9; 
+      color: #333; 
+    }
+    h1 { 
+      color: #2c3e50; 
+      text-align: center; 
+      margin-bottom: 30px; 
+    }
+    .container { 
+      display: flex; 
+      gap: 40px; 
+      justify-content: center; 
+    }
+    .box { 
+      background: #fff; 
+      border-radius: 8px; 
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+      padding: 20px; 
+      width: 45%; 
+    }
+    h2 { 
+      color: #3498db; 
+      margin-bottom: 15px; 
+    }
+    label { 
+      display: block; 
+      margin-top: 10px; 
+      font-weight: bold; 
+    }
+    input, textarea, select, button { 
+      width: 100%; 
+      padding: 10px; 
+      margin-top: 5px; 
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+    }
+    button { 
+      background: #3498db; 
+      color: #fff; 
+      border: none; 
+      cursor: pointer; 
+      margin-top: 15px; 
+      font-weight: bold;
+    }
+    button:hover { 
+      background: #2980b9; 
+    }
+    .problem { 
+      border-bottom: 1px solid #ddd; 
+      padding: 10px 0; 
+    }
+    .done { 
+      background-color: #d4edda; 
+      border-left: 4px solid #28a745; 
+      padding-left: 10px; 
+    }
+    img { 
+      margin-top: 10px; 
+      border-radius: 4px; 
+    }
+  </style>
+</head>
+<body>
+  <h1>BAKIM Uygulaması</h1>
+  <div class="container">
+    <!-- Problem Girişi -->
+    <div class="box">
+      <h2>Problem Girişi</h2>
+      <form id="problemForm">
+        <label>Hat:</label>
+        <input type="text" id="hat" required>
+        
+        <label>Açıklama:</label>
+        <textarea id="description" required></textarea>
+        
+        <label>Operatör:</label>
+        <input type="text" id="operator" required>
+        
+        <label>Fotoğraf:</label>
+        <input type="file" id="photo">
+        
+        <button type="submit">Kaydet</button>
+      </form>
+    </div>
+
+    <!-- Problem Listesi -->
+    <div class="box">
+      <h2>Problem Listesi</h2>
+      <div id="problemList"></div>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
