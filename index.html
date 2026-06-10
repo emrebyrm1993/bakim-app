@@ -4,111 +4,77 @@
   <meta charset="UTF-8">
   <title>BAKIM Uygulaması</title>
   <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      margin: 20px; 
-      background: #f4f6f9; 
-      color: #333; 
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f9; color: #333; }
+    h1 { color: #2c3e50; text-align: center; margin-bottom: 30px; }
+    .menu { text-align: center; margin-bottom: 20px; }
+    .menu button {
+      padding: 10px 20px; margin: 0 10px; border: none; border-radius: 6px;
+      font-weight: bold; cursor: pointer; color: #fff;
     }
-    h1 { 
-      color: #2c3e50; 
-      text-align: center; 
-      margin-bottom: 30px; 
-    }
-    .container { 
-      display: flex; 
-      gap: 40px; 
-      justify-content: center; 
-    }
-    .box { 
-      background: #fff; 
-      border-radius: 8px; 
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
-      padding: 20px; 
-      width: 45%; 
-    }
-    h2 { 
-      color: #3498db; 
-      margin-bottom: 15px; 
-    }
-    label { 
-      display: block; 
-      margin-top: 10px; 
-      font-weight: bold; 
-    }
-    input, textarea, select, button { 
-      width: 100%; 
-      padding: 10px; 
-      margin-top: 5px; 
-      border: 1px solid #ccc; 
-      border-radius: 4px; 
-    }
-    button { 
-      background: #3498db; 
-      color: #fff; 
-      border: none; 
-      cursor: pointer; 
-      margin-top: 15px; 
-      font-weight: bold;
-    }
-    button:hover { 
-      background: #2980b9; 
-    }
-    .problem { 
-      border-bottom: 1px solid #ddd; 
-      padding: 10px 0; 
-    }
-    .done { 
-      background-color: #d4edda; 
-      border-left: 4px solid #28a745; 
-      padding-left: 10px; 
-    }
-    img { 
-      margin-top: 10px; 
-      border-radius: 4px; 
-    }
+    .menu .entry { background: #3498db; }
+    .menu .list { background: #e67e22; }
+    .box { background: #fff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 20px; margin-top: 20px; }
+    h2 { color: #3498db; margin-bottom: 15px; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input, textarea, select, button { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+    button.save { background: #3498db; color: #fff; border: none; cursor: pointer; margin-top: 15px; font-weight: bold; }
+    button.save:hover { background: #2980b9; }
+    .problem { border-bottom: 1px solid #ddd; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+    .problem.done { background-color: #d4edda; border-left: 4px solid #28a745; padding-left: 10px; }
+    .actions button { margin-left: 10px; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; }
+    .actions .approve { background: #28a745; color: #fff; }
+    .actions .delete { background: #e74c3c; color: #fff; }
   </style>
 </head>
 <body>
   <h1>BAKIM Uygulaması</h1>
-  <div class="container">
-    <!-- Problem Girişi -->
-    <div class="box">
-      <h2>Problem Girişi</h2>
-      <form id="problemForm">
-        <label>Hat:</label>
-        <select id="hat" required>
-          <option value="">Hat seçin...</option>
-          <option value="10">Hat 10</option>
-          <option value="20">Hat 20</option>
-          <option value="30">Hat 30</option>
-          <option value="100">Hat 100</option>
-          <option value="200">Hat 200</option>
-          <option value="PAL">PAL</option>
-          <option value="ENJ1">ENJ1</option>
-          <option value="ENJ2">ENJ2</option>
-        </select>
-        
-        <label>Açıklama:</label>
-        <textarea id="description" required></textarea>
-        
-        <label>Operatör:</label>
-        <input type="text" id="operator" required>
-        
-        <label>Fotoğraf:</label>
-        <input type="file" id="photo">
-        
-        <button type="submit">Kaydet</button>
-      </form>
-    </div>
+  <div class="menu">
+    <button class="entry" onclick="showPage('entry')">Problem Girişi</button>
+    <button class="list" onclick="showPage('list')">Problemler</button>
+  </div>
 
-    <!-- Problem Listesi -->
-    <div class="box">
-      <h2>Problem Listesi</h2>
-      <div id="problemList"></div>
-    </div>
+  <!-- Problem Girişi -->
+  <div id="entryPage" class="box">
+    <h2>Problem Girişi</h2>
+    <form id="problemForm">
+      <label>Hat:</label>
+      <select id="hat" required>
+        <option value="">Hat seçin...</option>
+        <option value="10">Hat 10</option>
+        <option value="20">Hat 20</option>
+        <option value="30">Hat 30</option>
+        <option value="100">Hat 100</option>
+        <option value="200">Hat 200</option>
+        <option value="PAL">PAL</option>
+        <option value="ENJ1">ENJ1</option>
+        <option value="ENJ2">ENJ2</option>
+      </select>
+      
+      <label>Açıklama:</label>
+      <textarea id="description" required></textarea>
+      
+      <label>Operatör:</label>
+      <input type="text" id="operator" required>
+      
+      <label>Fotoğraf:</label>
+      <input type="file" id="photo">
+      
+      <button type="submit" class="save">Kaydet</button>
+    </form>
+  </div>
+
+  <!-- Problem Listesi -->
+  <div id="listPage" class="box" style="display:none;">
+    <h2>Problem Listesi</h2>
+    <div id="problemList"></div>
   </div>
 
   <script type="module" src="script.js"></script>
+  <script>
+    function showPage(page) {
+      document.getElementById("entryPage").style.display = page === "entry" ? "block" : "none";
+      document.getElementById("listPage").style.display = page === "list" ? "block" : "none";
+    }
+  </script>
 </body>
 </html>
