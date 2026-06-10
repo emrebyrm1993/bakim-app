@@ -1,6 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Supabase bağlantı bilgilerini buraya kendi projenin değerleriyle yaz
 const supabaseUrl = "https://YOUR_PROJECT_URL.supabase.co";
 const supabaseKey = "YOUR_ANON_KEY";
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -17,33 +16,17 @@ form.addEventListener("submit", async (e) => {
   const photoInput = document.getElementById("photo");
 
   let photoUrl = null;
-
-  // Fotoğraf isteğe bağlı
   if (photoInput.files.length > 0) {
     const file = photoInput.files[0];
     const fileName = `${Date.now()}-${file.name}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from("problem-photos")
-      .upload(fileName, file);
-
-    if (uploadError) {
-      alert("Fotoğraf yüklenemedi: " + uploadError.message);
-      return;
+    const { error: uploadError } = await supabase.storage.from("problem-photos").upload(fileName, file);
+    if (!uploadError) {
+      const { data } = supabase.storage.from("problem-photos").getPublicUrl(fileName);
+      photoUrl = data.publicUrl;
     }
-
-    const { data } = supabase.storage
-      .from("problem-photos")
-      .getPublicUrl(fileName);
-
-    photoUrl = data.publicUrl;
   }
 
-  // Tabloya kayıt ekle
-  const { error } = await supabase
-    .from("problems")
-    .insert([{ hat, description, operator, photo: photoUrl }]);
-
+  const { error } = await supabase.from("problems").insert([{ hat, description, operator, photo: photoUrl, status: "open" }]);
   if (error) {
     alert("Kayıt eklenemedi: " + error.message);
   } else {
@@ -53,13 +36,8 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-// Problem listesini yükle
 async function loadProblems() {
-  const { data, error } = await supabase
-    .from("problems")
-    .select("*")
-    .order("id", { ascending: false });
-
+  const { data, error } = await supabase.from("problems").select("*").order("id", { ascending: false });
   if (error) {
     console.error("Liste yüklenemedi:", error.message);
     return;
@@ -68,16 +46,34 @@ async function loadProblems() {
   problemList.innerHTML = "";
   data.forEach((p) => {
     const div = document.createElement("div");
-    div.className = "problem";
+    div.className = "problem" + (p.status === "done" ? " done" : "");
     div.innerHTML = `
-      <strong>Hat:</strong> ${p.hat}<br>
-      <strong>Açıklama:</strong> ${p.description}<br>
-      <strong>Operatör:</strong> ${p.operator}<br>
-      ${p.photo ? `<img src="${p.photo}" width="150">` : ""}
+      <div>
+        <strong>Hat:</strong> ${p.hat}<br>
+        <strong>Açıklama:</strong> ${p.description}<br>
+        <strong>Operatör:</strong> ${p.operator}<br>
+        ${p.photo ? `<img src="${p.photo}" width="150">` : ""}
+      </div>
+      <div class="actions">
+        <button class="approve">Onay</button>
+        <button class="delete">Sil</button>
+      </div>
     `;
+
+    // Onay butonu
+    div.querySelector(".approve").addEventListener("click", async () => {
+      await supabase.from("problems").update({ status: "done" }).eq("id", p.id);
+      loadProblems();
+    });
+
+    // Sil butonu
+    div.querySelector(".delete").addEventListener("click", async () => {
+      await supabase.from("problems").delete().eq("id", p.id);
+      loadProblems();
+    });
+
     problemList.appendChild(div);
   });
 }
 
-// Sayfa açıldığında listeyi yükle
 loadProblems();
